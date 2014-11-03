@@ -58,9 +58,9 @@
      https://api.digitalocean.com/v2/domains/1/2/3
   "
   [resource & parts]
-  (let [nested-url-parts 
-         (apply str 
-           (interpose "/" 
+  (let [nested-url-parts
+         (apply str
+           (interpose "/"
              (map normalize-url (into [] parts))))
         qualified-resource (name resource)]
     (str endpoint qualified-resource "/" nested-url-parts)))
@@ -77,15 +77,51 @@
                           (let [resource-endpoint
                             (-> (partial resource-url (name resource))
                                 (apply url-identifiers))]
-    (run-request method 
-                 resource-endpoint 
-                 token 
+    (run-request method
+                 resource-endpoint
+                 token
                  (into {} params))))]
   (fn
     ([token]
       (request-builder token [] {}))
     ([token resource-identifier & params]
       (request-builder token [resource-identifier] (into {} params))))))
+
+;; Droplet Actions
+;; **************************************************************
+
+(defn- droplet-action
+  "Constructor function that builds RESTful droplet action functions."
+  [action]
+  (fn [token droplet-id]
+    (run-request :post
+      (resource-url (str "droplets/" droplet-id "/actions"))
+      token
+      {:type action})))
+
+(def reboot-droplet
+  "Reboot a droplet"
+  (droplet-action "reboot"))
+
+(def power-cycle-droplet
+  "Power cycle a droplet (power off and then back on)"
+  (droplet-action "power_cycle"))
+
+(def shutdown-droplet
+  "Shutdown a droplet. A shutdown action is an attempt to shutdown
+  the Droplet in a graceful way."
+  (droplet-action "shutdown"))
+
+(def power-off-droplet
+  "Powers off a droplet. A power off is a hard shutdown and should
+   only be used if the shutdown action is not successful. It is
+   similar to cutting the power on a server and could lead to
+   complications."
+  (droplet-action "power_off"))
+
+(def power-on-droplet
+  "Powers on a droplet."
+  (droplet-action "power_on"))
 
 ;; Domains
 ;; **************************************************************
