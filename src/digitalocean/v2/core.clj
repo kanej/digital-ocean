@@ -184,11 +184,20 @@
 (def ssh-keys "Get all account SSH keys"
   (generic :get "account/keys"))
 
-(def get-key ssh-keys)
-
 (def create-key
   "Create a new SSH key"
   (generic :post "account/keys"))
+
+(def get-key ssh-keys)
+
+(def update-key
+  "Update the name of an SSH key"
+  (generic :put "account/keys"))
+
+(def destroy-key
+  "Destroy a public SSH key that you have in your account"
+  (generic :delete "account/keys"))
+
 
 ;; Regions
 ;; **************************************************************
