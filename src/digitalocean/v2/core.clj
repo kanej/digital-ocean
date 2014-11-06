@@ -90,6 +90,17 @@
 ;; Droplet Actions
 ;; **************************************************************
 
+(def actions
+  "List all actions that have been executed on the current account."
+  (generic :get :actions))
+
+(def get-action
+  "Get a single action"
+  actions)
+
+;; Droplet Actions
+;; **************************************************************
+
 (defn- droplet-action
   "Constructor function that builds RESTful droplet action functions."
   [action]
