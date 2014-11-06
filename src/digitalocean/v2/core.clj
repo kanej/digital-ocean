@@ -87,7 +87,7 @@
     ([token resource-identifier & params]
       (request-builder token [resource-identifier] (into {} params))))))
 
-;; Droplet Actions
+;; Actions
 ;; **************************************************************
 
 (def actions
@@ -97,6 +97,27 @@
 (def get-action
   "Get a single action"
   actions)
+
+;; Domain Records
+;; **************************************************************
+
+(defn records
+  "Return all records for a domain"
+  [token domain]
+  (run-request :get
+    (resource-url (str "domains/" domain "/records"))
+      token))
+
+;; Domains
+;; **************************************************************
+
+(def domains
+  "Fetch all domains"
+  (generic :get :domains))
+
+(def get-domain
+  "Get a single domain by name"
+  domains)
 
 ;; Droplet Actions
 ;; **************************************************************
@@ -133,27 +154,6 @@
 (def power-on-droplet
   "Powers on a droplet."
   (droplet-action "power_on"))
-
-;; Domains
-;; **************************************************************
-
-(def domains
-  "Fetch all domains"
-  (generic :get :domains))
-
-(def get-domain
-  "Get a single domain by name"
-  domains)
-
-;; Records
-;; **************************************************************
-
-(defn records
-  "Return all records for a domain"
-  [token domain]
-  (run-request :get
-    (resource-url (str "domains/" domain "/records"))
-      token))
 
 ;; Droplets
 ;; **************************************************************
@@ -197,7 +197,6 @@
 (def destroy-key
   "Destroy a public SSH key that you have in your account"
   (generic :delete "account/keys"))
-
 
 ;; Regions
 ;; **************************************************************
