@@ -155,20 +155,52 @@
   "Powers on a droplet."
   (droplet-action "power_on"))
 
+(def password-reset-droplet
+  "Reset the password for a droplet"
+  (droplet-action "password_reset"))
+
 ;; Droplets
 ;; **************************************************************
 
 (def droplets
   "Get all droplets"
-  (generic :get :droplets))
+  (generic :get (str "droplet/" )))
+
+(defn get-droplet-kernels
+  "Retrieve a list of all kernels available to a Dropet"
+  [token droplet-id]
+  (run-request :post
+    (resource-url (str "droplets/" droplet-id "/kernels")) token))
+
+(defn get-droplet-snapshots
+  "retrieve the snapshots that have been created from a Droplet"
+  [token droplet-id]
+  (run-request :post
+    (resource-url (str "droplets/" droplet-id "/snapshots")) token))
+
+(defn get-droplet-backups
+  "Retrieve any backups associated with a Droplet"
+  [token droplet-id]
+  (run-request :post
+    (resource-url (str "droplets/" droplet-id "/backups")) token))
+
+(defn get-droplet-actions
+  "Retrieve all actions that have been executed on a Droplet"
+  [token droplet-id]
+  (run-request :post
+    (resource-url (str "droplets/" droplet-id "/backups")) token))
+
+(def create-droplet
+  "Create a new droplet"
+  (generic :post :droplets))
 
 (def get-droplet
   "Get a single droplet by ID"
   droplets)
 
-(def create-droplet
-  "Create a new droplet"
-  (generic :post :droplets))
+(def destroy-droplet
+  "Delete a Droplet"
+  (generic :delete :droplets))
 
 ;; Images
 ;; **************************************************************
